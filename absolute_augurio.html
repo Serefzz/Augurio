@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Auguri Galattici! 🚀</title>
+    <!-- Font giocoso da Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --space-bg: #0b0d17;
+            --card-front: #7b2cbf; /* Viola spaziale */
+            --card-inside: #ffda00; /* Giallo cartoon */
+            --toon-border: 4px solid #000;
+            --text-color: #000;
+            --neon-pink: #ff00ff;
+        }
+
+        body {
+            background-color: var(--space-bg);
+            background-image: 
+                radial-gradient(white, rgba(255,255,255,.2) 2px, transparent 40px),
+                radial-gradient(white, rgba(255,255,255,.15) 1px, transparent 30px),
+                radial-gradient(white, rgba(255,255,255,.1) 2px, transparent 40px);
+            background-size: 550px 550px, 350px 350px, 250px 250px;
+            animation: backgroundMove 60s linear infinite;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            font-family: 'Fredoka One', cursive;
+            overflow: hidden;
+        }
+
+        @keyframes backgroundMove {
+            from { background-position: 0 0, 0 0, 0 0; }
+            to { background-position: 550px 1100px, 350px 700px, 250px 500px; }
+        }
+
+        .card-container {
+            perspective: 1500px;
+            cursor: pointer;
+        }
+
+        .card {
+            position: relative;
+            width: 280px;
+            height: 380px;
+            transform-style: preserve-3d;
+            transition: transform 1s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        /* Effetto apertura */
+        .card.open {
+            transform: rotateY(-180deg);
+        }
+
+        .card-front, .card-inside {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            -webkit-backface-visibility: hidden;
+            backface-visibility: hidden;
+            border-radius: 20px;
+            border: var(--toon-border);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 20px;
+            box-sizing: border-box;
+            box-shadow: 8px 8px 0px rgba(0,0,0,0.2);
+        }
+
+        /* LATO ESTERNO (COPERTINA) */
+        .card-front {
+            background-color: var(--card-front);
+            color: white;
+            z-index: 2;
+        }
+
+        .card-front h1 {
+            font-size: 2.2rem;
+            text-shadow: 3px 3px 0px #000;
+            margin: 0;
+        }
+
+        .rocket {
+            font-size: 4rem;
+            margin: 20px 0;
+            filter: drop-shadow(4px 4px 0px #000);
+        }
+
+        /* LATO INTERNO */
+        .card-inside {
+            background-color: var(--card-inside);
+            color: var(--text-color);
+            transform: rotateY(180deg);
+            z-index: 1;
+        }
+
+        .card-inside h2 {
+            font-size: 1.8rem;
+            margin-bottom: 10px;
+        }
+
+        /* PULSANTE TOON */
+        #play-btn {
+            background-color: var(--neon-pink);
+            color: white;
+            border: var(--toon-border);
+            padding: 15px 25px;
+            border-radius: 15px;
+            font-family: 'Fredoka One', cursive;
+            font-size: 1.2rem;
+            cursor: pointer;
+            box-shadow: 4px 4px 0px #000;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        #play-btn:hover {
+            transform: translate(-2px, -2px);
+            box-shadow: 6px 6px 0px #000;
+            background-color: #ff40ff;
+        }
+
+        #play-btn:active {
+            transform: translate(2px, 2px);
+            box-shadow: 0px 0px 0px #000;
+        }
+
+        /* Piccole stelline decorative interne */
+        .star-decor {
+            position: absolute;
+            font-size: 1.5rem;
+        }
+
+        .tap-msg {
+            margin-top: 20px;
+            font-size: 0.8rem;
+            background: white;
+            color: black;
+            padding: 5px 10px;
+            border-radius: 10px;
+            border: 2px solid black;
+        }
+
+    </style>
+</head>
+<body>
+
+    <div class="card-container" onclick="toggleCard()">
+        <div class="card" id="myCard">
+            
+            <!-- COPERTINA SPAZIALE -->
+            <div class="card-front">
+                <div class="star-decor" style="top:10px; left:10px;">⭐</div>
+                <div class="star-decor" style="bottom:10px; right:10px;">✨</div>
+                <h1>GUDDO<br>AUGURIO!</h1>
+                <div class="rocket">🚀</div>
+                <div class="tap-msg">TOCCA PER APRIRE</div>
+            </div>
+            
+            <!-- INTERNO TOON -->
+            <div class="card-inside">
+                <h2>Ehi, Rodo! 🥵</h2>
+                <p>My friend, ora potrai sorseggiare dell'acqua fresca anche su Kelt-9b! Persino Sion ne aveva bisogno...
+                </p>
+                <button id="play-btn" onclick="toggleAudio(event)">
+                    <span id="btn-icon">▶️</span> <span id="btn-text">PLAY</span>
+                </button>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- AUDIO (Segnaposto) -->
+    <audio id="greeting-audio">
+        <source src="Sion bigliets.mp3" type="audio/mpeg">
+    </audio>
+
+    <script>
+        const card = document.getElementById('myCard');
+        const audio = document.getElementById('greeting-audio');
+        const btnText = document.getElementById('btn-text');
+        const btnIcon = document.getElementById('btn-icon');
+        
+        let isOpen = false;
+
+        function toggleCard() {
+            if (!isOpen) {
+                card.classList.add('open');
+                isOpen = true;
+            }
+        }
+
+        function toggleAudio(event) {
+            event.stopPropagation(); // Evita di chiudere il biglietto cliccando il tasto
+
+            if (audio.paused) {
+                audio.play();
+                btnText.innerText = "PAUSA";
+                btnIcon.innerText = "⏸️";
+            } else {
+                audio.pause();
+                btnText.innerText = "RIPRENDI";
+                btnIcon.innerText = "▶️";
+            }
+        }
+
+        audio.onended = function() {
+            btnText.innerText = "RIASCOLTA";
+            btnIcon.innerText = "▶️";
+        };
+    </script>
+</body>
+</html>
